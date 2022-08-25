@@ -28,20 +28,22 @@ def determineCharset(option):
         return integers
     return allCharacters
 
+
+
 # Generate a filename
 def generateFilename():    
     for i in range(number):
         name = "".join(random.choices(charset,k=namesize))
 
-        while os.path.isfile(os.path.join(os.getcwd(), name+'.'+ext)):
+        while os.path.isfile(name+ext):
             name = "".join(random.choices(charset,k=namesize))
 
-        yield (name+'.'+ext)
+        yield (name)
 
 # Create the files
 def create():
-    for filename in generateFilename():
-        open(filename, 'w').close()
+    for filename in fileList:
+        open(filename.strip()+ ext, 'w').close()
 
 # Command-line arguments
 parser = argparse.ArgumentParser()
@@ -49,13 +51,24 @@ parser.add_argument("-n", "--number", type=int,help="Number of files to create (
 parser.add_argument("-e", "--extension", type=str, help="Extension of file (Default: txt)")
 parser.add_argument("-p", "--pattern", type=str, help="Name pattern [Possible values: lower, upper, number, mix] (Defaut: mix)")
 parser.add_argument("-l", "--length", type=int, help="Length of the filename (Default: 11)")
+parser.add_argument("-w", "--wordlist", type=str, help="Get filename with extension from a file. (One name per line)")
 args = parser.parse_args()
 
 # Set the required parameters
 number = abs(args.number or 10)
-ext = args.extension or 'txt'
+ext = "." + (args.extension or "txt")
 charset = determineCharset(args.pattern)
 namesize = abs(args.length or 11)
+wordlist = args.wordlist
+
+fileList = generateFilename()
+
+# If wordlist is given, change fileList
+if wordlist and os.path.isfile(wordlist):
+    with open(wordlist) as f:
+        fileList = f.readlines()[:number]
+    ext = ''
+
 
 # Start creating
 if __name__ == '__main__':
