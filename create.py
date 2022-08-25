@@ -1,3 +1,10 @@
+// Create bulk files
+
+'''
+Usage: python3 create.py [options]
+[options]: python3 create.py --help
+'''
+
 import os
 import random
 import argparse
