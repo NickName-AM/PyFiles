@@ -29,19 +29,18 @@ def determineCharset(option):
     return allCharacters
 
 # Generate a filename
-def generateFilename():
-    n = random.choice(range(9,12))
-    name = "".join(random.choices(charset,k=n))
+def generateFilename():    
+    for i in range(number):
+        name = "".join(random.choices(charset,k=namesize))
 
-    while os.path.isfile(os.path.join(os.getcwd(), name+'.'+ext)):
-        name = "".join(random.choices(charset,k=n))
+        while os.path.isfile(os.path.join(os.getcwd(), name+'.'+ext)):
+            name = "".join(random.choices(charset,k=namesize))
 
-    return (name+'.'+ext)
+        yield (name+'.'+ext)
 
 # Create the files
 def create():
-    for i in range(number):
-        filename = generateFilename()
+    for filename in generateFilename():
         open(filename, 'w').close()
 
 # Command-line arguments
@@ -49,12 +48,14 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-n", "--number", type=int,help="Number of files to create (Default: 10)")
 parser.add_argument("-e", "--extension", type=str, help="Extension of file (Default: txt)")
 parser.add_argument("-p", "--pattern", type=str, help="Name pattern [Possible values: lower, upper, number, mix] (Defaut: mix)")
+parser.add_argument("-l", "--length", type=int, help="Length of the filename (Default: 11)")
 args = parser.parse_args()
 
 # Set the required parameters
-number = args.number or 10
+number = abs(args.number or 10)
 ext = args.extension or 'txt'
 charset = determineCharset(args.pattern)
+namesize = abs(args.length or 11)
 
 # Start creating
 if __name__ == '__main__':
