@@ -1,4 +1,4 @@
-// Create bulk files
+# Create bulk files
 
 '''
 Usage: python3 create.py [options]
