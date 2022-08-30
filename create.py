@@ -91,7 +91,7 @@ if wordlist and os.path.isfile(wordlist):
     ext = ''
 
 if args.garbage:
-    garbageLength = args.garbagelength or 100
+    garbageLength = abs(args.garbagelength or 100)
 
 # Start creating
 if __name__ == '__main__':
