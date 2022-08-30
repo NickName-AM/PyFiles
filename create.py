@@ -1,19 +1,24 @@
+#!/usr/bin/env python3
 # Create bulk files
 # TO-DO: add optional path feature
 
 '''
-Usage: python3 create.py [options]
+Usage:
+python3 create.py [options]
 [options]: python3 create.py --help
+
+./create.py --help
 '''
 
 import os
 import random
+import string
 import argparse
 
 # Possible Patterns
-lowerLetters = "abcdefghijklmnopqrstuvwxyz"
-upperLetters = lowerLetters.upper()
-integers = "0123456788"
+lowerLetters = string.ascii_lowercase
+upperLetters = string.ascii_uppercase
+integers = string.digits
 allCharacters = lowerLetters + upperLetters + integers
 
 # Choose a pattern for filename
@@ -34,7 +39,7 @@ def generateFilename():
 
         while os.path.isfile(name+ext):
             if args.verbose:
-                print(f"{name+ext} exists.")
+                print(f"[-] '{name+ext}' exists.")
             name = "".join(random.choices(charset,k=namesize))
 
         yield (name)
@@ -54,7 +59,7 @@ def create():
         
         # Verbose info 
         if args.verbose:
-            print(f"{aFile} created")
+            print(f"[+] '{aFile}' created")
 
 # Command-line arguments
 parser = argparse.ArgumentParser()
