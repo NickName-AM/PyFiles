@@ -66,7 +66,7 @@ exclude = parser.add_mutually_exclusive_group()
 parser.add_argument("-n", "--number", type=int,help="Number of files to create (Default: 10)")
 parser.add_argument("-e", "--extension", type=str, help="Extension of file (Default: txt)")
 parser.add_argument("-l", "--length", type=int, help="Length of the filename (Default: 11)")
-exclude.add_argument("-w", "--wordlist", type=str, help="Get filename with extension from a file. (One name per line)[Doesn't work with --pattern]")
+exclude.add_argument("-w", "--wordlist", type=str, help="Get filename with EXTENSION from a file. (One name per line)[Doesn't work with --pattern]")
 exclude.add_argument("-p", "--pattern", type=str, help="Name pattern [Possible values: lower, upper, number, mix] (Defaut: mix)")
 parser.add_argument("-v", "--verbose", help="Verbose (Default: Off)", action="store_true")
 parser.add_argument("-g", "--garbage", help="Write random garbage data (Default: Off)", action="store_true")
@@ -94,15 +94,18 @@ wordlist = args.wordlist
 # Directory to create files in
 if args.path:
     # If the directory exists choose that path, else choose the current working directory
-    dPATH = os.path.isdir(args.path) and args.path or os.getcwd()   
+    dPATH = os.path.isdir(args.path) and args.path   
+else:
+    dPATH = os.getcwd()
 
-fileList = generateFilename()
 
 # If wordlist is given, use that wordlist instead of default generator
 if wordlist and os.path.isfile(wordlist):
     with open(wordlist) as f:
         fileList = f.readlines()[:number]
     ext = ''
+else:
+    fileList = generateFilename()
 
 # length of garbage data to write
 if args.garbage:
