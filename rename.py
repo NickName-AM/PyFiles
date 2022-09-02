@@ -10,16 +10,33 @@ import os
 import argparse
 import sys
 
-dPATH = '.'
+
+def rename():
+    c=0
+    for file in dirList:
+        oldFilePath = os.path.join(dPATH, file)
+
+        ext = file.split('.')[-1]
+        newFilePath = os.path.join(dPATH, f'{c}.{ext}')
+        os.rename(oldFilePath, newFilePath)
+        c+=1
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-P', '--path', type=str, help='Path to directory with files to rename.')
+args = parser.parse_args()
+
+
+dPATH = args.path or '.'
 
 # Get The files in the directory
 dirList = os.listdir(dPATH)
 
 # Remove the name of this file from the list
-dirList.remove(sys.argv[0])
+if sys.argv[0] in dPATH:
+    dirList.remove(sys.argv[0])
 
-c=0
-for file in dirList:
-    ext = file.split('.')[-1]
-    os.rename(file, f'{c}.{ext}')
-    c+=1
+
+
+if __name__ == '__main__':
+    rename()
