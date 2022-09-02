@@ -33,7 +33,7 @@ dPATH = args.path or '.'
 dirList = os.listdir(dPATH)
 
 # Remove the name of this file from the list
-if sys.argv[0] in dPATH:
+if sys.argv[0] in dirList:
     dirList.remove(sys.argv[0])
 
 
