@@ -52,7 +52,7 @@ def create():
 
         f = open(fileWithPath, "w")
         if args.garbage:
-            garbageData = "".join(random.choices(allCharacters, k=garbageLength))
+            garbageData = customgarbage or "".join(random.choices(allCharacters, k=garbageLength))
             f.write(garbageData)
         f.close()
         
@@ -70,7 +70,8 @@ exclude.add_argument("-w", "--wordlist", type=str, help="Get filename with EXTEN
 exclude.add_argument("-p", "--pattern", type=str, help="Name pattern [Possible values: lower, upper, number, mix] (Defaut: mix)")
 parser.add_argument("-v", "--verbose", help="Verbose (Default: Off)", action="store_true")
 parser.add_argument("-g", "--garbage", help="Write random garbage data (Default: Off)", action="store_true")
-parser.add_argument("-gl", "--garbagelength", type=int, help="No. of garbage characters to write (Default: 100)")
+parser.add_argument("--garbagelength", type=int, help="No. of garbage characters to write (Default: 100)")
+parser.add_argument("--customgarbage", type=str, help="Write your own data in the created files.(Use with '-g')")
 parser.add_argument("-P", "--path", type=str, help="directory to create files. (Default: '.' current directory)")
 args = parser.parse_args()
 
@@ -91,6 +92,9 @@ namesize = abs(args.length or 11)
 # wordlist with filenames
 wordlist = args.wordlist
 
+# User-provided data to write
+customgarbage = args.customgarbage
+
 # Directory to create files in
 if args.path:
     # If the directory exists choose that path, else choose the current working directory
@@ -110,6 +114,14 @@ else:
 # length of garbage data to write
 if args.garbage:
     garbageLength = abs(args.garbagelength or 100)
+
+if args.verbose:
+    print(f"Number of files to create: {number}")
+    print(f"Extension: {ext}")
+    print(f"Length of filename: {namesize}")
+    print(f"Charset: {charset}")
+    print(f"Wordlist: {wordlist}")
+    print(f"Path to create files in : {dPATH}")
 
 # Start creating
 if __name__ == '__main__':
