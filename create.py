@@ -38,8 +38,8 @@ def generateFilename():
         name = "".join(random.choices(charset,k=namesize))
 
         while os.path.isfile(name+ext):
-            if args.verbose:
-                print(f"[-] '{name+ext}' exists.")
+            
+            print(f"[-] '{name+ext}' exists.")
             name = "".join(random.choices(charset,k=namesize))
 
         yield (name)
