@@ -61,6 +61,8 @@ def rename(dPATH, dirList):
         oldPathFile = os.path.join(dPATH, file)
        
         newPathFile = generateFilename(ext)
+        if args.verbose:
+            print(f'[+] {file}.{ext} renamed to {newPathFile.split("/")[-1]}')
         
         os.rename(oldPathFile, newPathFile)
 
@@ -71,6 +73,7 @@ parser.add_argument('-P', '--path', type=str, help='Path to directory with files
 parser.add_argument('-p', '--pattern', type=str, help='Name pattern [Possible values: lower, upper, number, mix] (Defaut: number)')
 parser.add_argument('-e', '--extension', type=str, help='Extension to give to new files.')
 parser.add_argument('-l', '--length', type=int, help='Length of name of the files. (Default: 11)')
+parser.add_argument('-v', '--verbose', help='Verbose (Default: off)', action='store_true')
 args = parser.parse_args()
 
 ext = args.extension
@@ -87,6 +90,12 @@ dirList = os.listdir(dPATH)
 # Remove the name of this file from the list
 if sys.argv[0] in dirList:
     dirList.remove(sys.argv[0])
+
+if args.verbose:
+    print(f'Custom Extension: {bool(ext)}')
+    print(f'Pattern: {charset}')
+    print(f'Path: {dPATH}')
+    print(f'Length: {namesize}')
 
 
 
