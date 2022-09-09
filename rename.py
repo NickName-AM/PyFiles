@@ -54,10 +54,12 @@ def generateFilename(ext):
 
 
 def rename(dPATH, dirList):
+    global ext
     for file in dirList:
+        if not args.extension:
+            ext = file.split('.')[-1]
         oldPathFile = os.path.join(dPATH, file)
-        ext = file.split('.')[-1]
-        
+       
         newPathFile = generateFilename(ext)
         
         os.rename(oldPathFile, newPathFile)
@@ -67,10 +69,11 @@ def rename(dPATH, dirList):
 parser = argparse.ArgumentParser()
 parser.add_argument('-P', '--path', type=str, help='Path to directory with files to rename.')
 parser.add_argument('-p', '--pattern', type=str, help='Name pattern [Possible values: lower, upper, number, mix] (Defaut: number)')
+parser.add_argument('-e', '--extension', type=str, help='Extension to give to new files.')
 parser.add_argument('-l', '--length', type=int, help='Length of name of the files. (Default: 11)')
 args = parser.parse_args()
 
-
+ext = args.extension
 charset = determineCharset(args.pattern)
 namesize = abs(args.length or 11)
 dPATH = '.'
