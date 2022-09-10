@@ -15,6 +15,8 @@ import random
 import string
 import argparse
 
+extensionList = ('.aif', '.cda', 'mp3','.wav','.7z','.rar','.rpm','.tar.gz','.zip','.iso','.csv','.sql','.xml','.log','.db','.cgi','.bat','.bin','.py','.c','.go','.jar','.exe','.ttf','.otf','.bmp','.jpeg','.jpg','.png','.ps','.svg','.gif','.ico','.php','.js','.css','.html','.pptx','.cpp','.h','.sh','.xlsx','.bak','.cfg','.dll','.mp4','.mkv','.mpeg','.docx','.txt','.pdf')
+
 # Possible Patterns
 lowerLetters = string.ascii_lowercase
 upperLetters = string.ascii_uppercase
@@ -23,20 +25,22 @@ allCharacters = lowerLetters + upperLetters + integers
 
 # Choose a pattern for filename
 def determineCharset(option):
-    if option == 'lower':
+    if option == "lower":
         return lowerLetters
-    elif option == 'upper':
+    elif option == "upper":
         return upperLetters
-    elif option == 'number':
+    elif option == "number":
         return integers
     return allCharacters
 
 
 # Generate a filename
-def generateFilename():    
+def generateFilename():
+    global ext    
     for i in range(number):
         name = "".join(random.choices(charset,k=namesize))
-
+        if args.randomextension:
+            ext = random.choice(extensionList)
         while os.path.isfile(name+ext):
             
             print(f"[-] '{name+ext}' exists.")
@@ -65,6 +69,7 @@ parser = argparse.ArgumentParser(description="If unexpected values are given, de
 exclude = parser.add_mutually_exclusive_group()
 parser.add_argument("-n", "--number", type=int,help="Number of files to create (Default: 10)")
 parser.add_argument("-e", "--extension", type=str, help="Extension of file (Default: txt)")
+parser.add_argument("-r", "--randomextension", help="Use random extensions (Default: Off)", action="store_true")
 parser.add_argument("-l", "--length", type=int, help="Length of the filename (Default: 11)")
 exclude.add_argument("-w", "--wordlist", type=str, help="Get filename with EXTENSION from a file. (One name per line)[Doesn't work with --pattern]")
 exclude.add_argument("-p", "--pattern", type=str, help="Name pattern [Possible values: lower, upper, number, mix] (Defaut: mix)")
