@@ -65,7 +65,7 @@ def create():
             print(f"[+] '{aFile}' created")
 
 # Command-line arguments
-parser = argparse.ArgumentParser(description="If unexpected values are given, default values will be set.")
+parser = argparse.ArgumentParser()
 exclude = parser.add_mutually_exclusive_group()
 parser.add_argument("-n", "--number", type=int,help="Number of files to create (Default: 10)")
 parser.add_argument("-e", "--extension", type=str, help="Extension of file (Default: txt)")
@@ -83,22 +83,43 @@ args = parser.parse_args()
 
 # Set the required parameters
 # Number of files to create
-number = abs(args.number or 10)
+number = 10
+if args.number:
+    if args.number > 0:
+        number = args.number
+    else:
+        print('Number should be greater than 0.')
+        exit(-1)
+
 
 # Extension of the files
-ext = "." + (args.extension or "txt")
+if args.extension:
+    ext = f".{args.extension}"
+else:
+    ext = ".txt"
+
 
 # Charset to use
 charset = determineCharset(args.pattern)
 
+
 # length of filename (without ext)
-namesize = abs(args.length or 11)
+namesize = 11
+if args.length:
+    if args.length > 0:
+        namesize = args.length
+    else:
+        print('Length of file name should be greater than 0.')
+        exit(-1)
+
 
 # wordlist with filenames
 wordlist = args.wordlist
 
+
 # User-provided data to write
 customgarbage = args.customgarbage
+
 
 # Directory to create files in
 if args.path:
@@ -117,8 +138,13 @@ else:
     fileList = generateFilename()
 
 # length of garbage data to write
-if args.garbage:
-    garbageLength = abs(args.garbagelength or 100)
+garbageLength = 100
+if args.garbage and args.garbagelength:
+    if args.garbagelength > 0:
+        garbageLength = args.garbagelength
+    else:
+        print('Length of data to write should be greater than 0. (--garbagelength)')
+        exit(-1)
 
 if args.verbose:
     print(f"Number of files to create: {number}")
@@ -131,3 +157,4 @@ if args.verbose:
 # Start creating
 if __name__ == '__main__':
     create()
+ 
