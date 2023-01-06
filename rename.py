@@ -1,9 +1,9 @@
-# TO-DO: Decreased a bit
+#!/usr/bin/env python3
 
 # Rename bulk files
 
 '''
-Usage: python3 rename.py
+Usage: python3 rename.py --help
 '''
 
 import os
