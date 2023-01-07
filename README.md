@@ -1,9 +1,9 @@
 # Working with files
 
-## create.py
+## create.py ([Implementation in Go](https://github.com/NickName-AM/GoFiles))
 	- Create Bulk Files
 	- Usage: python3 create.py --help
-	- [Implementation in Go](https://github.com/NickName-AM/GoFiles)
+	
 
 ## rename.py
 	- Rename Bulk Files
