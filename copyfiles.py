@@ -45,9 +45,8 @@ for root, dirs, files in os.walk(args.startpath):
     # Gather file(s) with the given ext(s) from the current dir
     files_to_copy = [os.path.join(root, file) for file in files for e in ext_list if file.startswith(starts_with) and file.endswith(f'{ends_with}.{e}')]
     
-    print(files_to_copy)
 
     # If there are files with given ext in that dir, copy them to dst_dir
-    # if files_to_copy:
-        # for f in files_to_copy:
-            # shutil.copy2(f, dst_dir)
+    if files_to_copy:
+        for f in files_to_copy:
+            shutil.copy2(f, dst_dir)
