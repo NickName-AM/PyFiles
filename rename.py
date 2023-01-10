@@ -33,11 +33,11 @@ def determineCharset(option):
 def generateFilename(ext):
     global c
     if charset == 'number':
-        file = f"{c}.{ext}"
+        file = f"{prefix}{c}{suffix}.{ext}"
         c+=1
     else:
         r = 0
-        name = ''.join(random.choices(charset,k=namesize))
+        name = prefix + ''.join(random.choices(charset,k=namesize)) + suffix
         file = f'{name}.{ext}'
         while os.path.isfile(os.path.join(dPATH, file)):
             print(f'[-] \'{name}.{ext}\' exists.')
@@ -73,6 +73,8 @@ parser.add_argument('-P', '--path', type=str, help='Path to directory with files
 parser.add_argument('-p', '--pattern', type=str, help='Name pattern [Possible values: lower, upper, number, mix] (Defaut: number)')
 parser.add_argument('-e', '--extension', type=str, help='Extension to give to new files.')
 parser.add_argument('-l', '--length', type=int, help='Length of name of the files. (Default: 11)')
+parser.add_argument("--prefix", type=str, help="Prefix for the new filename")
+parser.add_argument("--suffix", type=str, help="Suffix for the new filename")
 parser.add_argument('-v', '--verbose', help='Verbose (Default: off)', action='store_true')
 args = parser.parse_args()
 
@@ -97,6 +99,8 @@ if args.verbose:
     print(f'Path: {dPATH}')
     print(f'Length: {namesize}')
 
+prefix = args.prefix or ''
+suffix = args.suffix or ''
 
 
 if __name__ == '__main__':
