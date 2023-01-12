@@ -2,6 +2,9 @@
 
 # Copy a bunch of files
 
+# Looks for files with matching  pattern starting from the given directory
+# until there are no directories left to traverse through
+
 '''
 python3 copyfiles.py --help
 '''
@@ -10,11 +13,11 @@ import argparse
 import os
 import shutil
 
-
+# Command-line argruments
 parser = argparse.ArgumentParser()
 parser.add_argument('startpath', help='Start searching from the given path')
 parser.add_argument('copyto', type=str, help='Copy the matching files to the given path')
-parser.add_argument('ext', type=list, help='extensions(s) to search for')
+parser.add_argument('--ext', type=list, help='extensions(s) to search for')
 parser.add_argument('--startswith', type=str, help='Filename starting with the given string and ending with given extension')
 parser.add_argument('--endswith', type=str, help='Filename ending with the given string and extension')
 args = parser.parse_args()
@@ -26,7 +29,13 @@ start_dir = args.startpath
 dst_dir = args.copyto
 
 # List of user-provided extensions
-ext_list = ''.join(args.ext).split(',')
+## If no exts are given, returns ['']
+ext_list_raw = ''.join(args.ext or []).split(',')
+
+if ext_list_raw != ['']:
+    ext_list = ['.'+e for e in ext_list_raw]
+else:
+    ext_list = ext_list_raw
 
 # Startswtih
 starts_with = args.startswith or ''
@@ -43,8 +52,8 @@ if not (os.path.exists(start_dir) and os.path.exists(dst_dir)):
 for root, dirs, files in os.walk(args.startpath):
 
     # Gather file(s) with the given ext(s) from the current dir
-    files_to_copy = [os.path.join(root, file) for file in files for e in ext_list if file.startswith(starts_with) and file.endswith(f'{ends_with}.{e}')]
-    
+    ## I know the below code is messy, but I was practicing list comprehension
+    files_to_copy = [os.path.join(root, file) for file in files for e in ext_list if file.startswith(starts_with) and file.endswith(f'{ends_with}{e}')]
 
     # If there are files with given ext in that dir, copy them to dst_dir
     if files_to_copy:
