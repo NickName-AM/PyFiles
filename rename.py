@@ -59,6 +59,10 @@ def rename(dPATH, dirList):
         if not args.extension:
             ext = file.split('.')[-1]
         oldPathFile = os.path.join(dPATH, file)
+        
+        # If it is a directory
+        if not os.path.isfile(oldPathFile):
+            continue
        
         newPathFile = generateFilename(ext)
         if args.verbose:
