@@ -20,6 +20,7 @@ parser.add_argument('copyto', type=str, help='Copy the matching files to the giv
 parser.add_argument('--ext', type=list, help='extensions(s) to search for')
 parser.add_argument('--startswith', type=str, help='Filename starting with the given string and ending with given extension')
 parser.add_argument('--endswith', type=str, help='Filename ending with the given string and extension')
+parser.add_argument('-r', '--recursive', help='Copy files recursively. (Default: Off)', action='store_true')
 args = parser.parse_args()
 
 # Path to start the search from
@@ -59,3 +60,6 @@ for root, dirs, files in os.walk(args.startpath):
     if files_to_copy:
         for f in files_to_copy:
             shutil.copy2(f, dst_dir)
+    
+    if not args.recursive:
+        break
