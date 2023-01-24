@@ -58,6 +58,7 @@ def create():
         if args.garbage:
             garbageData = customgarbage or "".join(random.choices(allCharacters, k=garbageLength))
             f.write(garbageData)
+        f.write(copyData)
         f.close()
         
         # Verbose info 
@@ -80,6 +81,7 @@ parser.add_argument("-g", "--garbage", help="Write random garbage data (Default:
 parser.add_argument("--garbagelength", type=int, help="No. of garbage characters to write (Default: 100)")
 parser.add_argument("--customgarbage", type=str, help="Write your own data in the created files.(Use with '-g')")
 parser.add_argument("-P", "--path", type=str, help="directory to create files. (Default: '.' current directory)")
+parser.add_argument("-c", "--copyfrom", type=str, help="File to copy data from.")
 args = parser.parse_args()
 
 
@@ -118,10 +120,14 @@ if args.length:
 # wordlist with filenames
 wordlist = args.wordlist
 
-
 # User-provided data to write
 customgarbage = args.customgarbage
 
+# Copy data from file
+copyData = ''
+if args.copyfrom and os.path.isfile(args.copyfrom):
+    with open(args.copyfrom) as f:
+        copyData = f.read()
 
 # Directory to create files in
 if args.path:
