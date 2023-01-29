@@ -33,72 +33,69 @@ def determineCharset(option):
 def generateFilename(ext):
     global c
     if charset == 'number':
-        file = f"{prefix}{c}{suffix}.{ext}"
+        file = f"{prefix}{c}{suffix}{ext}"
         c+=1
     else:
         r = 0
         name = prefix + ''.join(random.choices(charset,k=namesize)) + suffix
-        file = f'{name}.{ext}'
+        file = f'{name}{ext}'
         while os.path.isfile(os.path.join(dPATH, file)):
-            print(f'[-] \'{name}.{ext}\' exists.')
+            print(f'[-] \'{name}{ext}\' exists.')
             name = ''.join(random.choices(charset,k=namesize))
             r+=1
             if r > 10:
                 print('Too many repeats. Exiting.')
                 exit(-1)
-        
-    fullPathFile = os.path.join(dPATH, file)
 
-    return fullPathFile
+    return file
 
 
 
-def rename(dPATH, dirList):
+def rename(dPATH):
     global ext
-    for file in dirList:
-        if not args.extension:
-            ext = file.split('.')[-1]
-        oldPathFile = os.path.join(dPATH, file)
+    for root, dirs, files in os.walk(dPATH):
+        for file in files:
+            if (file == FILENAME):
+                continue
+            
+            new_filename = generateFilename(ext)
+            old_file_path = os.path.join(root, file)
+            new_file_path = os.path.join(root, new_filename)
+            os.rename(old_file_path, new_file_path)
+            if args.verbose:
+                print(f'{file} renamed to {new_filename}')
         
-        # If it is a directory
-        if not os.path.isfile(oldPathFile):
-            continue
-       
-        newPathFile = generateFilename(ext)
-        if args.verbose:
-            print(f'[+] {file}.{ext} renamed to {newPathFile.split("/")[-1]}')
-        
-        os.rename(oldPathFile, newPathFile)
+        if not args.recursive:
+            break
 
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-P', '--path', type=str, help='Path to directory with files to rename.')
-parser.add_argument('-p', '--pattern', type=str, help='Name pattern [Possible values: lower, upper, number, mix] (Defaut: number)')
+parser.add_argument('-p', '--pattern', type=str, help='Name pattern for new files [Possible values: lower, upper, number, mix] (Defaut: number)')
 parser.add_argument('-e', '--extension', type=str, help='Extension to give to new files.')
 parser.add_argument('-l', '--length', type=int, help='Length of name of the files. (Default: 11)')
 parser.add_argument("--prefix", type=str, help="Prefix for the new filename")
 parser.add_argument("--suffix", type=str, help="Suffix for the new filename")
 parser.add_argument('-v', '--verbose', help='Verbose (Default: off)', action='store_true')
+parser.add_argument('-r', '--recursive', help='Recursive (Default: off)', action='store_true')
 args = parser.parse_args()
 
-ext = args.extension
+FILENAME = sys.argv[0]
+ext = ''
+if args.extension:
+    ext = '.' + args.extension
+
 charset = determineCharset(args.pattern)
 namesize = abs(args.length or 11)
 dPATH = '.'
 
+
 if args.path:
     dPATH = (os.path.isdir(args.path) and args.path) or '.'
 
-# Get The files in the directory
-dirList = os.listdir(dPATH)
-
-# Remove the name of this file from the list
-if sys.argv[0] in dirList:
-    dirList.remove(sys.argv[0])
-
 if args.verbose:
-    print(f'Custom Extension: {bool(ext)}')
+    print(f'Extension: {bool(ext)}')
     print(f'Pattern: {charset}')
     print(f'Path: {dPATH}')
     print(f'Length: {namesize}')
@@ -108,4 +105,4 @@ suffix = args.suffix or ''
 
 
 if __name__ == '__main__':
-    rename(dPATH, dirList)
+    rename(dPATH)
