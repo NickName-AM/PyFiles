@@ -35,5 +35,5 @@ python3 rename.py -P /tmp -p number -e jpg
 ### Example
 This will traverse every directory starting from '/home/user/Documents' and copy all the files that have the extension 'pdf' to /tmp
 ```
-python3 copyfiles.py /home/user/Documents /tmp --ext pdf
+python3 copyfiles.py /home/user/Documents /tmp --ext pdf -r
 ```
